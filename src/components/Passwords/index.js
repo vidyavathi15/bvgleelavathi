@@ -21,18 +21,15 @@ class Passwords extends Component {
     nameInput: '',
     passwordInput: '',
     passwordList: [],
-    isEmptyView: true,
+    isEmptyView: false,
     searchInput: '',
   }
 
-  togglePassword = id => {
+  togglePassword = () => {
     this.setState(prevState => ({
-      passwordList: prevState.passwordList.map(eachPassword => {
-        if (eachPassword.id === id) {
-          return {...eachPassword, isShowPassword: !eachPassword.isShowPassword}
-        }
-        return eachPassword
-      }),
+      passwordList: prevState.passwordList.map(
+        (eachList => eachList.isShowPassword: true),
+      ),
     }))
   }
 
@@ -53,11 +50,11 @@ class Passwords extends Component {
 
     const newPassword = {
       id: v4(),
-      website: {websiteName},
-      name: {nameInput},
-      password: {passwordInput},
+      website: websiteName,
+      name: nameInput,
+      password: passwordInput,
       isShowPassword: false,
-      initialClassName: {initialBackgroundClassName},
+      initialClassName: initialBackgroundClassName,
     }
 
     this.setState(prevState => ({
@@ -68,46 +65,62 @@ class Passwords extends Component {
     }))
   }
 
+  callingEmptyPassword = () => {
+    this.setState({isEmptyView: true})
+  }
+
   deletePassword = id => {
     const {passwordList} = this.state
 
     const filteredPasswords = passwordList.filter(each => each.id !== id)
+    if (filteredPasswords.length === 0) {
+      this.callingEmptyPassword()
+    }
     this.setState({passwordList: filteredPasswords})
   }
 
+  getSearchResults = () => {
+    const {passwordList, searchInput} = this.state
+    const result = passwordList.filter(eachPassword =>
+      eachPassword.websiteName
+        .toLowerCase()
+        .includes(searchInput.toLowerCase()),
+    )
+    return result
+  }
+
   renderPasswordListView = () => {
-    const {passwordList} = this.state
-
-    // const searchedList = passwordList.filter(each =>
-
-    // each.password.includes(searchInput)
-
-    // )
+    const searchResults = this.getSearchResults()
 
     return (
-      <ul className="password-list">
-        {passwordList.map(each => (
-          <PasswordItem
-            key={each.id}
-            passwordDetails={each}
-            deletePassword={this.deletePassword}
-          />
-        ))}
-      </ul>
+      <>
+        {searchResults.length === 0 ? (
+          this.callingEmptyPassword()
+        ) : (
+          <ul className="password-list">
+            {searchResults.map(each => (
+              <PasswordItem
+                key={each.id}
+                passwordDetails={each}
+                deletePassword={this.deletePassword}
+                onClickShowPassword={this.onClickShowPassword}
+              />
+            ))}
+          </ul>
+        )}
+      </>
     )
   }
 
   renderNoPasswordView = () => (
-    <>
-      <div className="no-password-view">
-        <img
-          src="https://assets.ccbp.in/frontend/react-js/no-passwords-img.png"
-          alt="no passwords"
-          className="no-password-img"
-        />
-        <p className="no-password-txt">No Passwords</p>
-      </div>
-    </>
+    <div className="no-password-view">
+      <img
+        src="https://assets.ccbp.in/frontend/react-js/no-passwords-img.png"
+        alt="no passwords"
+        className="no-password-img"
+      />
+      <p className="no-password-txt">No Passwords</p>
+    </div>
   )
 
   onChangeWebsiteName = event => {
@@ -157,7 +170,7 @@ class Passwords extends Component {
                   </div>
                   <input
                     type="text"
-                    className="input"
+                    className="input-text"
                     value={websiteName}
                     onChange={this.onChangeWebsiteName}
                     placeholder="Enter Website"
@@ -173,7 +186,7 @@ class Passwords extends Component {
                   </div>
                   <input
                     type="text"
-                    className="input"
+                    className="input-text"
                     value={nameInput}
                     onChange={this.onChangeNameInput}
                     placeholder="Enter Username"
@@ -190,7 +203,7 @@ class Passwords extends Component {
                   </div>
                   <input
                     type="password"
-                    className="input"
+                    className="input-text"
                     value={passwordInput}
                     onChange={this.onChangePasswordInput}
                     placeholder="Enter Password"
@@ -201,12 +214,17 @@ class Passwords extends Component {
                   Add
                 </button>
               </form>
-              <img
-                src="https://assets.ccbp.in/frontend/react-js/password-manager-sm-img.png"
-                alt="password manager"
-                className="password-img"
-              />
             </div>
+            <img
+              src="https://assets.ccbp.in/frontend/react-js/password-manager-sm-img.png"
+              alt="password manager"
+              className="password-img d-md-none"
+            />
+            <img
+              src="https://assets.ccbp.in/frontend/react-js/password-manager-lg-img.png"
+              alt="password manager"
+              className="password-img d-none"
+            />
           </div>
           <div className="password-container">
             <div className="search-container">
@@ -219,12 +237,12 @@ class Passwords extends Component {
                   <img
                     src="https://assets.ccbp.in/frontend/react-js/password-manager-search-img.png"
                     alt="search"
-                    className="icon-img"
+                    className="icon-img-search"
                   />
                 </div>
                 <input
                   type="search"
-                  className="input"
+                  className="input-search"
                   value={searchInput}
                   onChange={this.onChangeSearchInput}
                   placeholder="Search"

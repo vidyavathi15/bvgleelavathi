@@ -5,10 +5,14 @@
   border-radius: 4px;
   background-color: transparent;
   border: 1px solid #b6c3ca;
+  margin-bottom: 10px;
+  width: 38%;
 }
 
 .each-password-container {
   display: flex;
+  justify-content: space-between;
+  padding: 10px;
 }
 
 .initial-container {
@@ -56,10 +60,14 @@
   font-size: 14px;
   font-family: 'Roboto';
   font-weight: 800;
+  margin: 0px;
 }
 .detail-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .website {
   color: #ffffff;
@@ -72,9 +80,26 @@
 }
 .username {
   color: #ffffff;
-  font-size: 12px;
+  font-size: 14px;
   font-family: 'Roboto';
 }
 .password-star-img {
-  width: 40px;
+  width: 70px;
+
+  color: #ffffff;
+  font-size: 14px;
+  font-family: 'Roboto';
+  font-weight: 800;
+}
+
+.delete-icon-btn {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.icon-img-delete {
+  height: 20px;
+  width: 20px;
 }

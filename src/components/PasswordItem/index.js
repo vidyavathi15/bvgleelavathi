@@ -15,8 +15,6 @@ const PasswordItem = props => {
 
   const initial = name ? name[0].toUpperCase() : ''
 
-  const altText = isShowPassword ? 'stars' : ''
-
   const onClickDeleteIcon = () => {
     deletePassword(id)
   }
@@ -32,23 +30,26 @@ const PasswordItem = props => {
 
           <p className="username">{name}</p>
           {isShowPassword ? (
-            `${password}`
+            <p className="password-color-txt">{password}</p>
           ) : (
             <img
               src="https://assets.ccbp.in/frontend/react-js/password-manager-stars-img.png"
-              alt={altText}
+              alt="stars"
               className="password-star-img"
             />
           )}
         </div>
 
-        <button type="button" className="delete-icon-btn">
+        <button
+          type="button"
+          className="delete-icon-btn"
+          testid="delete"
+          onClick={onClickDeleteIcon}
+        >
           <img
             src="https://assets.ccbp.in/frontend/react-js/password-manager-delete-img.png"
             alt="delete"
             className="icon-img-delete"
-            testid="delete"
-            onClick={onClickDeleteIcon}
           />
         </button>
       </div>

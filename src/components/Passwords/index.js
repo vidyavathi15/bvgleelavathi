@@ -21,15 +21,17 @@ class Passwords extends Component {
     nameInput: '',
     passwordInput: '',
     passwordList: [],
-    isEmptyView: false,
     searchInput: '',
   }
 
   togglePassword = () => {
     this.setState(prevState => ({
-      passwordList: prevState.passwordList.map(
-        (eachList => eachList.isShowPassword: true),
-      ),
+      passwordList: prevState.passwordList.map(eachPassword => {
+        if (eachPassword.isShowPassword === false) {
+          return {...eachPassword, isShowPassword: !eachPassword.isShowPassword}
+        }
+        return {...eachPassword, isShowPassword: !eachPassword.isShowPassword}
+      }),
     }))
   }
 
@@ -65,16 +67,12 @@ class Passwords extends Component {
     }))
   }
 
-  callingEmptyPassword = () => {
-    this.setState({isEmptyView: true})
-  }
-
   deletePassword = id => {
     const {passwordList} = this.state
 
     const filteredPasswords = passwordList.filter(each => each.id !== id)
     if (filteredPasswords.length === 0) {
-      this.callingEmptyPassword()
+      this.renderNoPasswordView()
     }
     this.setState({passwordList: filteredPasswords})
   }
@@ -82,10 +80,9 @@ class Passwords extends Component {
   getSearchResults = () => {
     const {passwordList, searchInput} = this.state
     const result = passwordList.filter(eachPassword =>
-      eachPassword.websiteName
-        .toLowerCase()
-        .includes(searchInput.toLowerCase()),
+      eachPassword.website.toLowerCase().includes(searchInput.toLowerCase()),
     )
+
     return result
   }
 
@@ -95,7 +92,7 @@ class Passwords extends Component {
     return (
       <>
         {searchResults.length === 0 ? (
-          this.callingEmptyPassword()
+          this.renderNoPasswordView()
         ) : (
           <ul className="password-list">
             {searchResults.map(each => (
@@ -103,7 +100,6 @@ class Passwords extends Component {
                 key={each.id}
                 passwordDetails={each}
                 deletePassword={this.deletePassword}
-                onClickShowPassword={this.onClickShowPassword}
               />
             ))}
           </ul>
@@ -145,7 +141,7 @@ class Passwords extends Component {
       nameInput,
       passwordInput,
       searchInput,
-      isEmptyView,
+
       passwordList,
     } = this.state
 
@@ -160,6 +156,7 @@ class Passwords extends Component {
           <div className="form-background-container">
             <div className="form-container">
               <form className="form-pass" onSubmit={this.addNewPassword}>
+                <h1 className="password-main-heading">Add New Password</h1>
                 <div className="input-container">
                   <div className="arrange-container">
                     <img
@@ -228,21 +225,21 @@ class Passwords extends Component {
           </div>
           <div className="password-container">
             <div className="search-container">
-              <p className="password-txt">
-                <span className="count">{passwordList.length}</span>Your
-                Passwords
-              </p>
-              <div className="icon-container">
-                <div className="arrange-container-search">
+              <div className="count-container">
+                <h1 className="password-txt">Your Passwords</h1>
+                <p className="count">{passwordList.length}</p>
+              </div>
+              <div className="input-container">
+                <div className="arrange-container">
                   <img
                     src="https://assets.ccbp.in/frontend/react-js/password-manager-search-img.png"
                     alt="search"
-                    className="icon-img-search"
+                    className="icon-img"
                   />
                 </div>
                 <input
                   type="search"
-                  className="input-search"
+                  className="input-text"
                   value={searchInput}
                   onChange={this.onChangeSearchInput}
                   placeholder="Search"
@@ -262,7 +259,7 @@ class Passwords extends Component {
               </label>
             </div>
 
-            {isEmptyView
+            {passwordList.length === 0
               ? this.renderNoPasswordView()
               : this.renderPasswordListView()}
           </div>
